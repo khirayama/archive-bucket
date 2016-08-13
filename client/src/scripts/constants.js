@@ -10,10 +10,12 @@ export const keyCodes = {
 };
 
 export const pages = {
+  BUCKET: 'BUCKET',
   CREATING_FOR_DESKTOP: 'CREATING_FOR_DESKTOP',
   NOT_FOUND: 'NOT_FOUND',
 };
 
 export const actionTypes = {
   CHANGE_HISTORY: 'CHANGE_HISTORY',
+  GET_CURRENT_USER_INFORMATION: 'GET_CURRENT_USER_INFORMATION',
 };

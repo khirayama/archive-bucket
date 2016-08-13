@@ -44,6 +44,16 @@ export default class App extends Component {
 
   _createPageElement(state) {
     switch (state.pageInformation.name) {
+      case pages.BUCKET:
+        return (
+          <section className="page-container">
+            <section className="page bucket-page">
+              <section className="page-content">
+                <h1>Map</h1>
+              </section>
+            </section>
+          </section>
+        );
       default:
         if (state.pageInformation.name == pages.NOT_FOUND) {
           return (
@@ -60,7 +70,7 @@ export default class App extends Component {
             <section className="page-container">
               <section className="page not-found-page">
                 <section className="page-content">
-                  <h1>Loading...</h1>
+                  <a href="/api/v1/auth/twitter">login with Twitter</a>
                 </section>
               </section>
             </section>

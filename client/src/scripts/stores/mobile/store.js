@@ -22,6 +22,7 @@ export default class AppStore extends MicroStore {
         }
       }
     };
+    this._currentUserInformation = null;
 
     this._routes();
     this._subscribe();
@@ -38,6 +39,14 @@ export default class AppStore extends MicroStore {
           this._updatePage(action.pathname);
           this.dispatchChange();
           break;
+        case types.GET_CURRENT_USER_INFORMATION:
+          this._currentUserInformation = action.currentUserInformation;
+          this._updatePageInformation({
+            name: pages.BUCKET,
+            meta: { title: 'Bucket' },
+          });
+          this.dispatchChange();
+          break;
       }
     });
   }
@@ -47,7 +56,7 @@ export default class AppStore extends MicroStore {
     this.on(UPDATE_PAGE, (pathname) => {
       switch (pathname) {
         default:
-          this._pageInformation = Object.assign({}, this._pageInformation, {
+          this._updatePageInformation({
             name: pages.NOT_FOUND,
             meta: { title: 'NOT FOUND' },
             styles: {
@@ -64,5 +73,15 @@ export default class AppStore extends MicroStore {
     return {
       pageInformation: this._pageInformation,
     };
+  }
+
+
+  // method for app
+  _isLoggedIn() {
+    return (this._currentUserInformation !== null);
+  }
+
+  _updatePageInformation(pageInformation) {
+    this._pageInformation = Object.assign({}, this._pageInformation, pageInformation);
   }
 }

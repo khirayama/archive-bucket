@@ -1,5 +1,8 @@
 import { subscribe } from '../libs/app-dispatcher';
-import { changeHistory } from '../actions/app-action-creators';
+import {
+  changeHistory,
+  getCurrentUserInformation,
+} from '../actions/app-action-creators';
 
 
 export default class EventRouter {
@@ -7,7 +10,7 @@ export default class EventRouter {
     subscribe((event) => {
       switch (event.type) {
         case 'UI_START_APP':
-          // initialize
+          getCurrentUserInformation(event.pathname);
           break;
         case 'UI_CHANGE_HISTORY':
           changeHistory(event.pathname);
