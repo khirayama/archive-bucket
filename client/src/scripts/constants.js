@@ -10,11 +10,10 @@ export const keyCodes = {
 };
 
 export const pages = {
+  CREATING_FOR_DESKTOP: 'CREATING_FOR_DESKTOP',
   NOT_FOUND: 'NOT_FOUND',
 };
 
 export const actionTypes = {
-  FAIL_AUTHENTICATE: 'FAIL_AUTHENTICATE',
-  // FOR_APP
   CHANGE_HISTORY: 'CHANGE_HISTORY',
 };

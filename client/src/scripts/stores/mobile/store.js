@@ -11,7 +11,6 @@ export default class AppStore extends MicroStore {
     super();
 
     // application state
-    this._page = null;
     this._pageInformation = {
       name: null,
       meta: { title: null },
@@ -47,17 +46,6 @@ export default class AppStore extends MicroStore {
   _routes() {
     this.on(UPDATE_PAGE, (pathname) => {
       switch (pathname) {
-        case '/':
-          this._pageInformation = Object.assign({}, this._pageInformation, {
-            name: pages.LANDING,
-            meta: { title: 'Landing' },
-            styles: {
-              transition: 'fadeInOut',
-              header: { position: 'none' },
-            },
-          });
-          this.dispatchChange();
-          break;
         default:
           this._pageInformation = Object.assign({}, this._pageInformation, {
             name: pages.NOT_FOUND,

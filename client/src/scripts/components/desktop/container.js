@@ -44,6 +44,20 @@ export default class App extends Component {
 
   _createPageElement(state) {
     switch (state.pageInformation.name) {
+      case pages.CREATING_FOR_DESKTOP:
+        return (
+          <section className="page-container">
+            <section className="page not-found-page">
+              <section className="page-content">
+                <h1>
+                  Just a moment, We are creating app for desktop!
+                  <br />
+                  Please access with mobile device.
+                </h1>
+              </section>
+            </section>
+          </section>
+        );
       default:
         if (state.pageInformation.name == pages.NOT_FOUND) {
           return (
