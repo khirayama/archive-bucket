@@ -4,12 +4,14 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { dispatch } from '../../libs/app-dispatcher';
 import { pages } from '../../constants';
 
+import BucketPage from './bucket-page';
+
 
 const propTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
-export default class App extends Component {
+export default class MobileContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -47,11 +49,7 @@ export default class App extends Component {
       case pages.BUCKET:
         return (
           <section className="page-container">
-            <section className="page bucket-page">
-              <section className="page-content">
-                <h1>Map</h1>
-              </section>
-            </section>
+            <BucketPage />
           </section>
         );
       default:
@@ -147,4 +145,4 @@ export default class App extends Component {
   }
 }
 
-App.propTypes = propTypes;
+MobileContainer.propTypes = propTypes;
