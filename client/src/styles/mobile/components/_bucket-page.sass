@@ -9,7 +9,16 @@
       transform: translateX(-50%)
       z-index: 1
       width: 90%
-      padding: 10px
+      .bucket-search-box-input
+        width: 100%
+        padding: 8px
+      .bucket-search-box-list
+        width: 100%
+        background-color: #fff
+        > li
+          padding: 4px 8px
+          & + li
+            border-top: solid 1px $color-divider
     .bucket-map
       position: fixed
       top: 0

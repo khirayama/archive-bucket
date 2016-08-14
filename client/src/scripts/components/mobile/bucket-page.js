@@ -5,9 +5,10 @@ const propTypes = {
 };
 
 class Map {
-  constructor(mapElement, inputElement) {
+  constructor(mapElement, inputElement, listElement) {
     this._mapElement = mapElement;
     this._inputElement = inputElement;
+    this._listElement = listElement;
 
     this._map = new google.maps.Map(this._mapElement, {
       scrollwheel: true,
@@ -15,9 +16,12 @@ class Map {
       disableDefaultUI: true,
     });
     this._user = new User(this._map);
+    // this._infowindow = new google.maps.InfoWindow({
+    //   content: '<h1>Add bucket list</h1>'
+    // });
     this._markers = [];
 
-    this._service = new google.maps.places.PlacesService(this._map);
+    this._placesServie = new google.maps.places.PlacesService(this._map);
 
     this._getCurrentPosition((position) => {
       const pos = {
@@ -38,40 +42,58 @@ class Map {
   _setEventListeners() {
     this._inputElement.addEventListener('keydown', (event) => {
       const keyCode = event.keyCode;
+      const keyword = event.target.value;
+      const pos = this._user.getPosition();
 
-      if (keyCode === 13) {
-        const pos = this._user.getPosition();
-        this._service.textSearch({
-          query: event.target.value,
+      if (keyword) {
+        this._placesServie.textSearch({
           location: new google.maps.LatLng(pos.lat, pos.lng),
-          radius: 300,
+          radius: 800,
+          query: event.target.value,
         }, (places, status) => {
-          if (places.length) {
-            this._inputElement.blur();
-            this._clearMarker();
-            this._showPlaces(places);
+          if (places && places.length) {
+            if (keyCode === 13) {
+              this._inputElement.blur();
+              this._renderList([]);
+              this._clearMarker();
+              this._showPlaces(places, true);
+            } else {
+              this._renderList(places);
+              this._clearMarker();
+              this._showPlaces(places);
+            }
           }
         });
+      } else {
+        this._renderList([]);
       }
     });
   }
-  _showPlaces(places) {
+  _renderList(places) {
+    const candidateHTML = places.map((place) => {
+      return `<li>${ place.name }</li>`;
+    }).join('');
+    this._listElement.innerHTML = candidateHTML;
+  }
+  _showPlaces(places, isBounds) {
     const bounds = new google.maps.LatLngBounds();
     places.forEach((place) => {
-      const icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
+      // const icon = {
+      //   url: place.icon,
+      //   size: new google.maps.Size(71, 71),
+      //   origin: new google.maps.Point(0, 0),
+      //   anchor: new google.maps.Point(17, 34),
+      //   scaledSize: new google.maps.Size(25, 25)
+      // };
 
-      this._addMarker(new google.maps.Marker({
+      const marker = new google.maps.Marker({
         map: this._map,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location
-      }));
+        position: place.geometry.location,
+      })
+      marker.addListener('click', () => {
+        // this._infowindow.open(this._map, marker);
+      });
+      this._addMarker(marker);
 
       if (place.geometry.viewport) {
         bounds.union(place.geometry.viewport);
@@ -79,7 +101,9 @@ class Map {
         bounds.extend(place.geometry.location);
       }
     });
-    this._map.fitBounds(bounds);
+    if (isBounds) {
+      this._map.fitBounds(bounds);
+    }
   }
   _addMarker(marker) {
     this._markers.push(marker);
@@ -134,13 +158,22 @@ class User {
 
 export default class BucketPage extends Component {
   componentDidMount() {
-    new Map(this.refs.map, this.refs.input);
+    new Map(this.refs.map, this.refs.input, this.refs.list);
   }
   render() {
     return (
       <section className="page bucket-page">
         <section className="page-content">
-          <input autoFocus className="bucket-search-box" type="text" ref="input" />
+          <section className="bucket-search-box">
+            <input
+              autoFocus
+              className="bucket-search-box-input"
+              type="text"
+              ref="input"
+              placeholder="Search"
+            />
+            <ul className="bucket-search-box-list" ref="list" />
+          </section>
           <section className="bucket-map" ref="map" />
         </section>
       </section>
